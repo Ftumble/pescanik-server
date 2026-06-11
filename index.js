@@ -64,18 +64,25 @@ async function fetch_cloudflare(i) {
   } else await fetch_cloudflare(i + 1)
 }
 
-app.listen(PORT, (err) => {
-  console.log('slusam na portu ' + PORT + "...");
+function start() {
   fetch_cloudflare().then(() => {
     if (clfl_url == undefined) {
       console.log('Ne mogu da pronadjem cf...');
-      handle_command('exit')
+      setTimeout(1000, () => {
+        start()
+      })
+      return;
     }
     
     console.log('Cloudflare link je: ' + clfl_url);
     
     get_command()
   })
+}
+
+app.listen(PORT, (err) => {
+  console.log('slusam na portu ' + PORT + "...");
+  start()
 })
 
 app.use(cors())
