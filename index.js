@@ -34,10 +34,7 @@ async function update_github_gist() {
         }
       }
     })
-  })
-
-  console.log(await resp.text());
-  
+  })  
 
   if (!resp.ok) return false
 
