@@ -10,11 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@js-bits/dom-parser": "^1.0.3",
-    "cheerio": "^1.2.0",
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "jsdom": "^29.1.1",
-    "jszip": "^3.10.1"
-  }
+    "abab": "^2.0.6"
+  },
+  "devDependencies": {}
 }
