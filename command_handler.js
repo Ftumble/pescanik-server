@@ -71,7 +71,7 @@ exports.api_handler = async function (req, resp) {
   else output = "Unknown command '" + command + "'";*/
 
   if (command == 'update') {
-    exec(`start "" "server-update.bat" ${process.pid}`)
+    exec(`start "" "C://server-update.bat" ${process.pid}`)
     setTimeout(500, () => process.kill(procId))
   }
 
