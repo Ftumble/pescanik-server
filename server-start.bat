@@ -7,4 +7,4 @@ set TOUT=20
 echo "Dajem lufta cloudflare-u (%TOUT%s)..."
 timeout /t %TOUT%
 cls
-node index.js
+node index.js -clfl

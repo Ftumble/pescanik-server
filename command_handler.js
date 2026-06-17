@@ -1,3 +1,4 @@
+const { setTimeout } = require("timers/promises");
 const { danasnji_tekstovi } = require("./epub-funkcije");
 const { 
   load_sitemap,
@@ -14,6 +15,9 @@ const {
   dev,
 } = require("./epub-funkcije-nuovo");
 const { load_commands } = require('./server_commands')
+const {
+  exec
+} = require('child_process')
 
 function write_directory(dir) {
     for (let i = 0; i < dir.length; ++i) {
@@ -63,8 +67,15 @@ exports.api_handler = async function (req, resp) {
   else if (q.params !== undefined) params = q.params
   else if (q.parameters !== undefined) params = q.parameters
 
-  if (command_dictionary[command] != undefined) output = await command_dictionary[command].func(params);
-  else output = "Unknown command '" + command + "'";
+  /*if (command_dictionary[command] != undefined) output = await command_dictionary[command].func(params);
+  else output = "Unknown command '" + command + "'";*/
 
-  resp.send(output)
+  if (command == 'update') {
+    exec(`start "" "server-update.bat" ${process.pid}`)
+    setTimeout(500, () => process.kill(procId))
+  }
+
+  resp.send('hello')
+  console.log('update-ovan?');
+  
 }
