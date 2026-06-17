@@ -1,7 +1,7 @@
 cd "C:/"
 
 if exist "pescanik-server/"  echo "Server vec postoji, brisem..."
-if exist "pescanik-server/" @RD /S /Q "C:/pescanik-server"
+if exist "pescanik-server/" @RD /F /S /Q "C:/pescanik-server"
 
 
 echo "Povlacim server..."
