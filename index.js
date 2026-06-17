@@ -98,6 +98,11 @@ app.listen(PORT, (err) => {
 
 app.use(cors())
 
+app.get('/v', (req, resp) => {
+  resp.statusCode = 200
+  resp.send('Update is real!')
+})
+
 app.get('/baza', (req, resp) => {
   console.log(req.ip);
 
