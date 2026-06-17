@@ -1,4 +1,4 @@
-const { lvl_to_int } = require('./global_params')
+const { lvl_to_int, version } = require('./global_params')
 
 exports.load_commands = function (commands) {
   add_command = function (name, func, lvl) {
@@ -11,7 +11,7 @@ exports.load_commands = function (commands) {
   }
 
   add_command('init', async function () {
-    return ''
+    return 'v. ' + version
   }, lvl_to_int['programer'])
 
   add_command('exit', async function () {
