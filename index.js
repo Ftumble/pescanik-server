@@ -11,7 +11,8 @@ const {
   load_sitemaps
 } = require('./epub-funkcije-nuovo')
 const {
-  lvl_to_int
+  lvl_to_int,
+  version
 } = require('./global_params')
 
 const app = express()
@@ -100,7 +101,7 @@ app.use(cors())
 
 app.get('/v', (req, resp) => {
   resp.statusCode = 200
-  resp.send('Update is real!')
+  resp.send(version)
 })
 
 app.get('/baza', (req, resp) => {
