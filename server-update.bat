@@ -1,7 +1,5 @@
 taskkill /F /pid %1
 
-pause
-
 timeout /t 5
 
 
