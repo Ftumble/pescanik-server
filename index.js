@@ -3,11 +3,16 @@ const cors = require('cors')
 const fs = require('fs')
 const { danasnji_tekstovi } = require('./epub-funkcije')
 const readline = require('node:readline');
-const { handle_command } = require('./command_handler')
+const { 
+  handle_command_console,
+  api_handler 
+} = require('./command_handler')
 const {
   load_sitemaps
 } = require('./epub-funkcije-nuovo')
-
+const {
+  lvl_to_int
+} = require('./global_params')
 
 const app = express()
 
@@ -65,19 +70,25 @@ async function fetch_cloudflare(i) {
 }
 
 function start() {
-  fetch_cloudflare().then(() => {
-    if (clfl_url == undefined) {
-      console.log('Ne mogu da pronadjem cf...');
-      setTimeout(1000, () => {
-        start()
+  handle_command_console('init', lvl_to_int['programer'])
+
+  if (process.argv.includes('-clfl'))
+    { 
+      fetch_cloudflare().then(() => {
+        if (clfl_url == undefined) {
+          console.log('Ne mogu da pronadjem cf...');
+          setTimeout(1000, () => {
+            start()
+          })
+          return;
+        }
+        
+        console.log('Cloudflare link je: ' + clfl_url);
+        
+        get_command()
       })
-      return;
-    }
-    
-    console.log('Cloudflare link je: ' + clfl_url);
-    
-    get_command()
-  })
+  }
+  else get_command()
 }
 
 app.listen(PORT, (err) => {
@@ -140,6 +151,9 @@ app.get("/tekst", (req, resp, err) => {
   }
 })
 
+app.get('/api', (req, resp, err) => {
+  api_handler(req, resp)
+})
 
 async function get_command() {
   const rl = readline.createInterface({
@@ -147,9 +161,9 @@ async function get_command() {
     output: process.stdout,
   });
 
-  rl.question(`> `, command => {
+  rl.question(``, command => {
     command = command.trim();
-    handle_command(command + (command.startsWith('clfl') ? ' ' + clfl_url : '')).then(() => {
+    handle_command_console(command + (command.startsWith('clfl') ? ' ' + clfl_url : ''), lvl_to_int['main-console']).then(() => {
       rl.close();
       get_command();
     })

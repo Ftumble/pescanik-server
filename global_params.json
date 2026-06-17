@@ -1,0 +1,9 @@
+{
+  "lvl_to_int": {
+    "programer": 10000,
+    "main-console": 1000,
+    "admin": 10,
+    "user": 1,
+    "anonim": 0
+  }
+}

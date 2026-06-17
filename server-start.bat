@@ -1,4 +1,5 @@
 start "" claudflare.bat
+call server-github.setup.bat
 call server-setup-npm.bat
 
 set TOUT=20

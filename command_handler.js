@@ -13,6 +13,7 @@ const {
   download_options,
   dev,
 } = require("./epub-funkcije-nuovo");
+const { load_commands } = require('./server_commands')
 
 function write_directory(dir) {
     for (let i = 0; i < dir.length; ++i) {
@@ -24,72 +25,11 @@ function is_param(params, param) {
   return params.split(' ').includes(param)
 }
 
-const command_dictionary = {
-  exit: async function () {
-    console.log('Zatvara se server...');
-    process.kill(process.pid)
-  },
-  "clear-danasnji": async function () {
-    danasnji_tekstovi = {};
-  },
-  echo: async function(param) {
-    console.log('[SERVER]: ' + param); 
-  },
-  load: async function(params) {
-    if (is_param(params, 'saved')) {
-      await load_saved_sitemaps();
-      return;
-    }
-    await load_sitemap();
-    console.log('Sitemaps loaded, to go through them use walk-sm and ls-sm');
-    if (is_param(params, 'save')) save_loaded_sitemaps()
-  },
-  "walk-sm": async function(params) {
-    const sms = (is_param(params, "root") ? root_folder() : current_folder())
-    
-    if (sms == undefined) console.log('Sitemap not initialized...');
-    else if (walk(params) == false) {
-      console.log(`'${params}' is not a valid path...`);
-      return;
-    } else console.log('Current directory is changed!');
-  },
-  "ls-sm": async function(params) {
-    const sms = (is_param("root") ? root_folder() : current_folder())
-    if (sms == undefined) console.log('Sitemap not initialized...');
-    else write_directory(sms);
-  },
-  "clear-sm": async function() {
-    await sitemap_explorer_clear();
-    console.log('Sitemap-explorer cache cleared!');
-  },
-  "relevant-sm": async function() {
-    await relevant_sitemap();
-  },
-  "save-loaded": async function() {
-    await save_loaded_sitemaps()
-  },
-  "set-dwn-opt": async function (params) {
-    await set_download_options(params)
-  },
-  "dwn-opt": async function () {
-    await get_download_options()
-  },
-  "dwn-opts": async function () {    
-    for (let i = 0; i < download_options.dwn.length; ++i) {
-      console.log(`'${download_options.dwn[i]}' <--> '${Object.keys(download_options.ali)[i]}'`);
-    }
-  },
-  'clfl': async function (param) {
-    if (param.split(' ').length == 1) console.log(`'${param}'`);
-    else console.log('Clfl f-ja ne prima argumente...');
-    
-  },  
-  "dev": async function() {
-      await dev();
-  }
-}
+var command_dictionary = undefined
 
-exports.handle_command = async function (command) {
+exports.handle_command_console = async function (command, acc) {
+  if (command_dictionary === undefined) load_commands((command_dictionary = {}))
+
   const comm = command.split(' ')[0];
   const params = command.split(' ');
   var par = "";
@@ -97,10 +37,34 @@ exports.handle_command = async function (command) {
   for (let i = 1; i < params.length; ++i) {
     par += params[i] + (i == params.length - 1 ? "" : " ");
   }
+  var output;
+  if (command_dictionary[comm] != undefined) output = acc >= command_dictionary[comm].lvl ? await command_dictionary[comm].func(par) : 'Access denied';
+  else output = "Unknown command '" + comm + "'";
 
-  if (command_dictionary[comm] != undefined) await command_dictionary[comm](par);
-  else console.log("Unknown command '" + comm + "'");
+  if (output != undefined) console.log(output);
   
-
   return;
+}
+
+exports.api_handler = async function (req, resp) {
+  if (command_dictionary === undefined) load_commands((command_dictionary = {}))
+
+  const q = req.query
+
+  var command
+  
+  if (q.c !== undefined) command = q.c
+  else if (q.comm !== undefined) command = q.comm
+  else if (q.command !== undefined) command = q.command
+
+  var params
+
+  if (q.p !== undefined) params = q.p
+  else if (q.params !== undefined) params = q.params
+  else if (q.parameters !== undefined) params = q.parameters
+
+  if (command_dictionary[command] != undefined) output = await command_dictionary[command].func(params);
+  else output = "Unknown command '" + command + "'";
+
+  resp.send(output)
 }
