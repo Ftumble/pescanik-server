@@ -1,5 +1,6 @@
 const {
   standard_params,
+  user_params,
   lvl_to_int, 
   version,
   date_offset,
@@ -11,8 +12,10 @@ const {
 const {
   return_option,
   respond,
-
 } = require('./useful_funcs')
+const {
+  type_of_user
+} = require('./user_handler')
 
 exports.echo = {
   func: function (q, resp) {
@@ -79,8 +82,22 @@ exports.set_date_offset = {
 exports.get_date_offset = {
   func: function (q, resp) {
       resp.send(respond(`d: ${date_offset.d}, m: ${date_offset.m}, y:${date_offset.y}`, {
-
     }))
+  },
+  lvl: lvl_to_int['anonim']
+}
+
+exports.get_user_info = {
+  func: function (q, resp) {
+    const u =  return_option(q, user_params)
+    var tu = type_of_user(u)
+
+    if (tu === undefined) {
+      resp.send(respond('User ID ne postoji u bazi...'))
+      return
+    }
+
+    resp.send(respond('Korisnik je ulogovan kao \'' + tu + "'", { type: tu }))
   },
   lvl: lvl_to_int['anonim']
 }

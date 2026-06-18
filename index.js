@@ -163,6 +163,14 @@ app.get("/tekst", (req, resp, err) => {
 })
 
 app.get('/api', (req, resp, err) => {
+  console.log(req.url);
+  
+  api_handler(req, resp)
+})
+
+app.get('/api/info', (req, resp, err) => {
+  req.url = req.url.replace(/\?.+/i, '') + '?c=info'
+
   api_handler(req, resp)
 })
 
