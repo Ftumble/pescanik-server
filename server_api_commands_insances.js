@@ -78,9 +78,22 @@ exports.set_date_offset = {
 
 exports.get_date_offset = {
   func: function (q, resp) {
-    resp.send(respond(`d: ${date_offset.d}, m: ${date_offset.m}, y:${date_offset.y}`, {
+      resp.send(respond(`d: ${date_offset.d}, m: ${date_offset.m}, y:${date_offset.y}`, {
 
     }))
-  }
+  },
+  lvl: lvl_to_int['anonim']
 }
 
+exports.info = {
+  func: function (q, resp) {
+    resp.send(respond(`
+echo,
+update,
+version|v,
+set_date_offset,
+get_date_offset
+`))
+  },
+  lvl: lvl_to_int['anonim']
+}
