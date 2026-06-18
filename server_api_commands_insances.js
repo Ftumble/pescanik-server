@@ -33,6 +33,7 @@ exports.update = {
   func: function (q, resp) {
     const procId = process.pid
     exec(`start "" "C://server-update.bat" ${process.pid}`)
+    resp.send(respond('Server restarting...'))
     setTimeout(() => process.kill(procId), 500)
   },
   lvl: lvl_to_int['anonim']
