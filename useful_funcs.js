@@ -20,6 +20,6 @@ exports.return_option = function (q, options) {
 exports.respond = function (msg, obj) {
   return JSON.stringify({
     message: msg,
-    obj: obj
+    body: obj
   })
 }

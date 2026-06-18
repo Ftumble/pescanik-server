@@ -87,13 +87,8 @@ exports.get_date_offset = {
 
 exports.info = {
   func: function (q, resp) {
-    resp.send(respond(`
-echo,
-update,
-version|v,
-set_date_offset,
-get_date_offset
-`))
+
+    resp.send(respond(`Lista dostupnih komandi`), Object.keys(exports))
   },
   lvl: lvl_to_int['anonim']
 }
