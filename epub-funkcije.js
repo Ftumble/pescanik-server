@@ -2,6 +2,10 @@ const JSZip = require('jszip')
 const { JSDOM } = require('jsdom')
 const cheerio = require('cheerio')
 const { return_epub_files } = require('./epub-parser')
+const { same_day } = require('./useful_funcs')
+const { 
+  date_with_offset
+} = require('./global_params')
 
 
 global.DOMParser = new JSDOM().window.DOMParser 
@@ -141,7 +145,7 @@ async function danasnji_tekstovi() {
     var autor = el.querySelector('.fn').textContent;
     var datum = el.querySelector('.entry-meta .data-link time').getAttribute('datetime');
     
-    if (Number(sadasnjost) >= Date.parse(datum)) break
+    if (!same_day(datum, date_with_offset(Date.now()))) continue
 
     //console.log('prosao', datum);
   

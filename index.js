@@ -14,6 +14,7 @@ const {
   lvl_to_int,
   version
 } = require('./global_params')
+const { load_users } = require('./user_handler')
 
 const app = express()
 
@@ -71,6 +72,10 @@ async function fetch_cloudflare(i) {
 }
 
 function start() {
+  load_users()
+  
+  console.log();
+  
   handle_command_console('init', lvl_to_int['programer'])
 
   if (process.argv.includes('-clfl'))

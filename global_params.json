@@ -6,5 +6,7 @@
     "user": 1,
     "anonim": 0
   },
-  "version": "1.0"
+  "standard_params": [ "p", "param", "parameter" ],
+  "command_params": [ "c", "command", "comm" ], 
+  "version": "1.1 (API update 1)"
 }

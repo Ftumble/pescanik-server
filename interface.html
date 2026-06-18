@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server interface</title>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        height: 100vh;
+        width: 100vw;
+        flex-wrap: nowrap;
+        flex-flow: column;
+      }
+
+      #sep-hor {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        & > .seps {
+          height: 50%;
+          width: 100%;  
+        }
+      }
+
+      #top {
+        justify-content: center;
+        align-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div id="sep-hor">
+        <div class="seps" id="top">
+          <input type="url" value="http://localhost:3000" placeholder="http://localhost:3000">
+        </div>
+        <div class="seps" id="bott"></div>
+      </div>
+    </main>
+  </body>
+</html>

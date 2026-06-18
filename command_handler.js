@@ -14,10 +14,19 @@ const {
   download_options,
   dev,
 } = require("./epub-funkcije-nuovo");
-const { load_commands } = require('./server_commands')
 const {
-  exec
-} = require('child_process')
+  return_option,
+  respond
+} = require('./useful_funcs')
+const { load_commands } = require('./server_commands')
+const { load_api_commands } = require('./server_api_commands')
+const {
+  command_params
+} = require('./global_params')
+const {
+  is_user_valid,
+  user_strength
+} = require('./user_handler')
 
 function write_directory(dir) {
     for (let i = 0; i < dir.length; ++i) {
@@ -50,32 +59,42 @@ exports.handle_command_console = async function (command, acc) {
   return;
 }
 
+var api_command_dictionary = undefined
+
 exports.api_handler = async function (req, resp) {
-  if (command_dictionary === undefined) load_commands((command_dictionary = {}))
-
+  if (api_command_dictionary === undefined) load_api_commands((api_command_dictionary = {}))
+    
   const q = req.query
+  console.log(JSON.stringify(q));
+  const cstr = return_option(q, command_params)
+  if (cstr === undefined) {
+    resp.send(respond('Nema komandnog parametra...'))
+    return
+  }
 
-  var command
+  let u_lvl = user_strength(return_option(q, [ 'ut', 'user-token', 'token' ]))
+  const com = api_command_dictionary[cstr]
+  if (com === undefined) {
+    resp.send(respond('Nepoznata komanda \'' + com + '\'...'))
+    return
+  }
+
+  if (Number(u_lvl) < Number(com.lvl)) {
+    resp.send(respond('Nemate pravo pristupa...'))
+    return
+  }
   
-  if (q.c !== undefined) command = q.c
-  else if (q.comm !== undefined) command = q.comm
-  else if (q.command !== undefined) command = q.command
 
-  var params
+  com.func(q, resp)
 
-  if (q.p !== undefined) params = q.p
-  else if (q.params !== undefined) params = q.params
-  else if (q.parameters !== undefined) params = q.parameters
-
-  /*if (command_dictionary[command] != undefined) output = await command_dictionary[command].func(params);
-  else output = "Unknown command '" + command + "'";*/
+  /*
 
   if (command == 'update') {
     exec(`start "" "C://server-update.bat" ${process.pid}`)
     setTimeout(500, () => process.kill(procId))
-  }
+  }*/
 
-  resp.send('hello')
-  console.log('update-ovan?');
+  if (!resp.headersSent) console.log('Nije poslat zahtev?', JSON.stringify(q));
+    
   
 }
