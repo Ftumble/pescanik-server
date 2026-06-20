@@ -1,7 +1,6 @@
 const JSZip = require('jszip')
 const { JSDOM } = require('jsdom')
 const cheerio = require('cheerio')
-const { log } = require('node:console')
 const fs = require('fs')
 const {
   same_day

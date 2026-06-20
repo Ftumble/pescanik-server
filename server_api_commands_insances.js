@@ -1,10 +1,11 @@
 const {
   standard_params,
   user_params,
+  response_plain_text,
   lvl_to_int, 
   version,
   date_offset,
-  date_with_offset
+  date_with_offset,
 } = require('./global_params')
 const {
   exec
@@ -69,9 +70,9 @@ exports.set_date_offset = {
       return
     }
 
-    date_offset.d = Number(date_offset.d | d)
-    date_offset.m = Number(date_offset.m | m)
-    date_offset.y = Number(date_offset.y | y)
+    if (d !== undefined) date_offset.d = d
+    if (m !== undefined) date_offset.m = m
+    if (y !== undefined) date_offset.y = y
 
     resp.send(respond('Promenjen offset!'))
 
@@ -107,5 +108,30 @@ exports.info = {
 
     resp.send(respond(`Lista dostupnih komandi`, Object.keys(exports)))
   },
+  lvl: lvl_to_int['anonim']
+}
+
+exports.target_date = {
+  func: function (q, resp) {
+    const d = date_with_offset(Date.now())
+    if (return_option(q, response_plain_text) === undefined) resp.send(respond('Datum danasnjih tekstova', d))
+    else resp.send(`${(new Date(d)).getDate()}-${(new Date(d)).getMonth() + 1}-${(new Date(d)).getFullYear()}`)
+  },
+  lvl: lvl_to_int['anonim']
+}
+
+exports.sub_one_day = {
+  func: function (q, resp) {
+    date_offset.d++
+    exports.target_date.func(q, resp)
+  }, 
+  lvl: lvl_to_int['anonim']
+}
+
+exports.add_one_day = {
+  func: function (q, resp) {
+    if (date_offset.d > 0) date_offset.d--
+    exports.target_date.func(q, resp)
+  }, 
   lvl: lvl_to_int['anonim']
 }
