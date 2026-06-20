@@ -10,5 +10,5 @@
   "command_params": [ "c", "command", "comm" ], 
   "user_params": [ "u", "user" ],
   "response_plain_text": [ "rpt", "respons_plain_text" ],
-  "version": "1.1 (API update 1.6 Kole showcase)"
+  "version": "1.2 (API update with Kindle)"
 }
